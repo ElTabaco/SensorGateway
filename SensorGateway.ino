@@ -21,55 +21,18 @@
 #include "WIFIConnector.h"
 #include "OTAWebUpdater.h"
 #include "MQTTConnector.h"
-#include "LoraWan.h"
+//#include "LoraWan.h"
+#include "SensorUltraSonic.h"
+#include "ArduinoJson.h"  // https://arduinojson.org/
 
-#include "images.h"
-
-
-
-
-
-
-
-void logo() {
-  Heltec.display->clear();
-  Heltec.display->drawXbm(0, 5, logo_width, logo_height, logo_bits);
-  Heltec.display->display();
-}
-
-void displayLoRaData(String package) {
-  Heltec.display->clear();
-  Heltec.display->setTextAlignment(TEXT_ALIGN_LEFT);
-  Heltec.display->setFont(ArialMT_Plain_10);
-  Heltec.display->drawString(0 , 15 , "Received " + getPackSize() + " bytes");
-  Heltec.display->drawStringMaxWidth(0 , 26 , 128, package);
-  Heltec.display->drawString(0, 0, getRSSI());
-  Heltec.display->display();
-}
-
-
+//#include "images.h"
+String deviceName = "sg_001";      // unique
 
 
 void setup() {
-  Heltec.display->init();
-  // Heltec.display->flipScreenVertically();
-  logo();
-  delay(1000);
-
-  Heltec.display->clear();
-  String statusLora = setupLora();
-  Heltec.display->drawString(0, 30, "Lora..." + statusLora);
   String statusWiFi = setupWiFi();
-  Heltec.display->drawString(0, 0, "WIFI..." + statusWiFi);
   String statusOTA = setupOTA(WIFI_HOST);
-  Heltec.display->drawString(0, 10, "OTA..." + statusOTA);
   String statusMQTT = setupMQTT();
-  Heltec.display->drawString(0, 20, "MQTT..." + statusMQTT);
-
-  Heltec.display->drawString(0, 50, "Wait for incoming data...");
-  Heltec.display->display();
-
-
 }
 
 void loop() {
@@ -77,8 +40,15 @@ void loop() {
   loopOTA();
   if (received())
   {
+    float distance = getDistance();
+    StaticJsonDocument <256> loraBuffer;
+    loraBuffer["device"] = deviceName;
+    loraBuffer["distace"]["value"]   = distance;
+    //  loraBuffer["sensor"]["unit"]   = "cm";
+    String rxPackage;
+    serializeJson(loraBuffer, rxPackage);
+    
     String rxPackage = getPackage();
-    displayLoRaData(rxPackage);
     reconnectWiFi();
     publishMQTT(rxPackage);
   }
