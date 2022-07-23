@@ -25,7 +25,14 @@
 
 #include "images.h"
 
+//#define SENSOR_DHT
 
+#if defined(SENSOR_DHT)
+#include "DHT.h"   // https://www.bastelgarage.ch/index.php?route=extension/d_blog_module/post&post_id=1
+#define DHTPIN 13          // Hier die Pin Nummer eintragen wo der Sensor angeschlossen ist
+#define DHTTYPE DHT22     // DHT11; DHT22
+DHT dht(DHTPIN, DHTTYPE);
+#endif
 
 
 
@@ -56,6 +63,10 @@ void setup() {
   logo();
   delay(1000);
 
+#if defined(SENSOR_DHT)
+  dht.begin();
+#endif
+
   Heltec.display->clear();
   String statusLora = setupLora();
   Heltec.display->drawString(0, 30, "Lora..." + statusLora);
@@ -82,5 +93,11 @@ void loop() {
     reconnectWiFi();
     publishMQTT(rxPackage);
   }
+
+#if defined(SENSOR_DHT)
+  // Update value every 2s
+  float h = dht.readHumidity();    // humidity in %
+  float t = dht.readTemperature(); // temperature in °C
+#endif
   delay(500);
 }
