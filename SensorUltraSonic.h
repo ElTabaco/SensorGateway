@@ -1,0 +1,2 @@
+void setupUltraSonic();
+float getDistance();
