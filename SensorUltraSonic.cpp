@@ -9,8 +9,8 @@
 #define ECHO_PIN      (12) //TX_PIN / ECHO_PIN Module pins 
 #elif defined(ULTASONIC_MODE3)
 #include <SoftwareSerial.h>
-#define RX_PIN    (36) //RX_PIN / TRIGGER_PIN Module pins 
-#define TX_PIN    (37) //TX_PIN / ECHO_PIN Module pins 
+#define RX_PIN    (16) //RX_PIN / TRIGGER_PIN Module pins 
+#define TX_PIN    (17) //TX_PIN / ECHO_PIN Module pins 
 SoftwareSerial mySerial(RX_PIN, TX_PIN); // RX, TX
 #endif
 
@@ -70,5 +70,5 @@ float getDistance() {
 #else
 float getDistance() {
   return 999999;
-}
+} 
 #endif

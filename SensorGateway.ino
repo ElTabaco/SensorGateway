@@ -30,27 +30,27 @@ String deviceName = "sg_001";      // unique
 
 
 void setup() {
-  String statusWiFi = setupWiFi();
-  String statusOTA = setupOTA(WIFI_HOST);
-  String statusMQTT = setupMQTT();
+  //String statusWiFi = setupWiFi();
+  //String statusOTA = setupOTA(WIFI_HOST);
+  //String statusMQTT = setupMQTT();
+  setupUltraSonic();
+  Serial.begin(115200);
 }
 
 void loop() {
-  loopMQTT();
-  loopOTA();
-  if (received())
-  {
-    float distance = getDistance();
-    StaticJsonDocument <256> loraBuffer;
-    loraBuffer["device"] = deviceName;
-    loraBuffer["distace"]["value"]   = distance;
-    //  loraBuffer["sensor"]["unit"]   = "cm";
-    String rxPackage;
-    serializeJson(loraBuffer, rxPackage);
-    
-    String rxPackage = getPackage();
-    reconnectWiFi();
-    publishMQTT(rxPackage);
-  }
+  Serial.print("############# Debug");
+  //loopMQTT();
+  //loopOTA();
+  float distance = getDistance();
+  Serial.printf("Distance is %f\n", distance);
+  //StaticJsonDocument <256> loraBuffer;
+  //loraBuffer["device"] = deviceName;
+  //loraBuffer["distace"]["value"]   = distance;
+  //  loraBuffer["sensor"]["unit"]   = "cm";
+  //String rxPackage;
+  //serializeJson(loraBuffer, rxPackage);
+
+  //reconnectWiFi();
+  // publishMQTT(rxPackage);
   delay(500);
 }
