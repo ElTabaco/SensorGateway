@@ -12,15 +12,15 @@ char* setupWiFi(void)
   WiFi.mode(WIFI_STA);
   WiFi.setAutoConnect(true);
   WiFi.setAutoReconnect(true);
-  //WiFi.persistent(true);
+  // WiFi.persistent(true);
   WiFi.setHostname(host);
-  WiFi.begin(ssid, password); //fill in "Your WiFi SSID","Your Password"
+  WiFi.begin(ssid, password); // fill in "Your WiFi SSID","Your Password"
   delay(100);
 
   byte count = 0;
   while (WiFi.status() != WL_CONNECTED && count < 10)
   {
-    count ++;
+    count++;
     delay(500);
   }
 

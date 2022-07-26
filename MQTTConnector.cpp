@@ -1,14 +1,11 @@
 #include "MQTTConnector.h"
-
-
-#include "ArduinoJson.h"  // https://arduinojson.org/
+#include "ArduinoJson.h" // https://arduinojson.org/
 
 const char broker[] = MQTT_BROCKER;
-const int  port     = MQTT_PORT;
+const int port = MQTT_PORT;
 const char mqttClientId[] = MQTT_CLIENT_ID;
 const char mqttUsername[] = MQTT_USER;
 const char mqttPassword[] = MQTT_PASSWORD;
-
 
 WiFiClient wifiClient;
 MqttClient mqttClient(wifiClient);
@@ -18,14 +15,15 @@ char* setupMQTT()
   // MQTT Client
   mqttClient.setId(mqttClientId);
   mqttClient.setUsernamePassword(mqttUsername, mqttPassword);
-  while (!mqttClient.connect(broker, port)) {
+  while (!mqttClient.connect(broker, port))
+  {
     delay(1000);
   }
-  if (!mqttClient.connected()) {
+  if (!mqttClient.connected())
+  {
     return "FAIL";
   }
   return "OK";
-
 }
 
 void loopMQTT(void)
@@ -34,20 +32,24 @@ void loopMQTT(void)
   // avoids being disconnected by the broker
   mqttClient.poll();
 }
-void reconnectMQTT() {
-  if (!mqttClient.connected()) {
-    while (!mqttClient.connect(broker, port)) {
-      delay (1000);
+void reconnectMQTT()
+{
+  if (!mqttClient.connected())
+  {
+    while (!mqttClient.connect(broker, port))
+    {
+      delay(1000);
     }
   }
 }
 
-void publishMQTT(String package) {
+void publishMQTT(String package)
+{
   reconnectMQTT();
-  StaticJsonDocument <256> loraBuffer;
+  StaticJsonDocument<256> loraBuffer;
   deserializeJson(loraBuffer, package);
-  String device          = loraBuffer["device"];
-  String topic2  = topic + "/" + device + "/";
+  String device = loraBuffer["device"];
+  String topic2 = topic + "/" + device + "/";
 
   //  unsigned int value          = loraBuffer["distace"]["value"];
   mqttClient.beginMessage(topic2 + "distace/value");
@@ -64,7 +66,6 @@ void publishMQTT(String package) {
     }
   */
 }
-
 
 MqttClient getMqttClient()
 {

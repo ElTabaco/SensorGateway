@@ -13,11 +13,10 @@ char* setupLora(void)
   //  Heltec.display->flipScreenVertically();
   Heltec.display->setFont(ArialMT_Plain_10);
 
-
   LoRa.setSpreadingFactor(LORA_SF);
-  //LoRa.enableCrc();
+  // LoRa.enableCrc();
   LoRa.onReceive(callbackOnReceive);
-  //send();
+  // send();
   LoRa.receive();
   return "OK";
 }
@@ -29,18 +28,18 @@ void send()
   LoRa.endPacket();
 }
 
-void callbackOnReceive(int packetSize)//LoRa receiver interrupt service
+void callbackOnReceive(int packetSize) // LoRa receiver interrupt service
 {
-  //if (packetSize == 0) return;
+  // if (packetSize == 0) return;
   package = "";
   packSize = String(packetSize, DEC);
 
   while (LoRa.available())
   {
-    package += (char) LoRa.read();
+    package += (char)LoRa.read();
   }
   rssi = "RSSI: " + String(LoRa.packetRssi(), DEC);
-  //RssiDetection = abs(LoRa.packetRssi());
+  // RssiDetection = abs(LoRa.packetRssi());
 
   receiveflag = true;
 }
