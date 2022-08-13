@@ -2,12 +2,12 @@
 
 #include "SensorUltraSonic.h"
 // JSN SR04T 2.0 ultrasound module
-#define ULTASONIC_MODE3
+//#define ULTASONIC_MODE2
 
 #if defined(ULTASONIC_MODE1)
 #define TRIGGER_PIN (13) // RX_PIN / TRIGGER_PIN Module pins
 #define ECHO_PIN (12)    // TX_PIN / ECHO_PIN Module pins
-#elif defined(ULTASONIC_MODE3)
+#elif defined(ULTASONIC_MODE2)
 #include <SoftwareSerial.h>
 #define RX_PIN (36) // RX_PIN / TRIGGER_PIN Module pins
 #define TX_PIN (37) // TX_PIN / ECHO_PIN Module pins
@@ -19,7 +19,7 @@ void setupUltraSonic()
 #if defined(ULTASONIC_MODE1)
   pinMode(TRIGGER_PIN, OUTPUT);
   pinMode(ECHO_PIN, INPUT); // INPUT_PULLUP
-#elif defined(ULTASONIC_MODE3)
+#elif defined(ULTASONIC_MODE2)
   mySerial.begin(9600);
 #endif
 }
@@ -38,7 +38,7 @@ float getDistance()
   float distanceTemp = duration * 0.343 / 2; // Convert the pulse duration to distance. Speed of sound wave devided by 2 (go and back) (alternativ devide with 58.2)
   return distanceTemp;
 }
-#elif defined(ULTASONIC_MODE3)
+#elif defined(ULTASONIC_MODE2)
 float getDistance()
 {
   // Mode 2 JSN SR04 T ultrasound module
