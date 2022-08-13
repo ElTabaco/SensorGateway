@@ -9,6 +9,7 @@
 #include "LoraWan.h"
 
 #include "images.h"
+String deviceName = "sg_001";      // unique
 
 //#define SENSOR_DHT
 #if defined(SENSOR_DHT)
