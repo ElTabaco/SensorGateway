@@ -1,20 +1,5 @@
 /*
-  This is a simple example show the Heltec.LoRa recived data in OLED.
-
-  The onboard OLED display is SSD1306 driver and I2C interface. In order to make the
-  OLED correctly operation, you should output a high-low-high(1-0-1) signal by soft-
-  ware to OLED's reset pin, the low-level signal at least 5ms.
-
-  OLED pins to ESP32 GPIOs via this connecthin:
-  OLED_SDA -- GPIO4
-  OLED_SCL -- GPIO15
-  OLED_RST -- GPIO16
-
-  by Aaron.Lee from HelTec AutoMation, ChengDu, China
-  成都惠利特自动化科技有限公司
-  www.heltec.cn
-
-  this project also realess in GitHub:
+  Origin also realess in GitHub:
   https://github.com/Heltec-Aaron-Lee/WiFi_Kit_series
 */
 
@@ -24,20 +9,30 @@
 //#include "LoraWan.h"
 #include "SensorUltraSonic.h"
 #include "ArduinoJson.h"  // https://arduinojson.org/
-
-//#include "images.h"
 String deviceName = "sg_001";      // unique
+//#define SENSOR_DHT
+#if defined(SENSOR_DHT)
+#include "DHT.h"      // https://www.bastelgarage.ch/index.php?route=extension/d_blog_module/post&post_id=1
+#define DHTPIN 13
+#define DHTTYPE DHT22 // DHT11; DHT22
+DHT dht(DHTPIN, DHTTYPE);
+#endif
 
-
-void setup() {
+void setup()
+{
   //String statusWiFi = setupWiFi();
   //String statusOTA = setupOTA(WIFI_HOST);
   //String statusMQTT = setupMQTT();
   setupUltraSonic();
   Serial.begin(115200);
+#if defined(SENSOR_DHT)
+  dht.begin();
+#endif
+
 }
 
-void loop() {
+void loop()
+{
   Serial.print("############# Debug");
   //loopMQTT();
   //loopOTA();
@@ -48,9 +43,10 @@ void loop() {
   //loraBuffer["distace"]["value"]   = distance;
   //  loraBuffer["sensor"]["unit"]   = "cm";
   //String rxPackage;
-  //serializeJson(loraBuffer, rxPackage);
 
-  //reconnectWiFi();
-  // publishMQTT(rxPackage);
+#if defined(SENSOR_DHT) // Update value every 2s
+  float h = dht.readHumidity();    // humidity in %
+  float t = dht.readTemperature(); // temperature in °C
+#endif
   delay(500);
 }
